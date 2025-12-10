@@ -35,6 +35,16 @@ struct HorizontalLine : IDraw
   p_t left_end;
   size_t len;
 };
+
+struct VerticalLine : IDraw
+{
+  VerticalLine(p_t top_end, size_t len);
+  p_t begin() const override;
+  p_t next(p_t) const override;
+  p_t top_end;
+  size_t len;
+};
+
 size_t points(const IDraw &d, p_t **pts, size_t s);
 
 f_t frame(const p_t *pts, size_t s);
@@ -73,11 +83,29 @@ top::p_t top::HorizontalLine::next(p_t prev) const
   return {prev.x + 1, prev.y};
 }
 
+top::p_t top::VerticalLine::begin() const { return top_end; }
+
+top::p_t top::VerticalLine::next(p_t prev) const
+{
+  if (top_end.y - prev.y + 1 >= static_cast<int>(len))
+  {
+    return top_end;
+  }
+
+  return {prev.x, prev.y - 1};
+}
+
 bool top::operator==(p_t a, p_t b) { return a.x == b.x && a.y == b.y; }
 bool top::operator!=(p_t a, p_t b) { return !(a == b); }
 top::HorizontalLine::HorizontalLine(top::p_t left_end, size_t len)
     : IDraw(), left_end{left_end}, len{len}
-{}
+{
+}
+
+top::VerticalLine::VerticalLine(top::p_t top_end, size_t len)
+    : IDraw(), top_end{top_end}, len{len}
+{
+}
 
 void top::extend(p_t **pts, size_t s, p_t p)
 {
@@ -92,18 +120,20 @@ void top::extend(p_t **pts, size_t s, p_t p)
 }
 size_t top::points(const IDraw &d, p_t **pts, size_t s)
 {
-  p_t p = d.begin();
-  extend(pts, s, p);
-  size_t delta = 1;
+    p_t p = d.begin();
+    extend(pts, s, p);
+    size_t delta = 1;
 
-  while (d.next(p) != d.begin())
-  {
-    p = d.next(p);
-    extend(pts, s + delta, p);
-    ++delta;
-  }
-  return delta;
+    for (;;) {
+        p_t nxt = d.next(p);
+        if (nxt == d.begin()) break;
+        p = nxt;
+        extend(pts, s + delta, p);
+        ++delta;
+    }
+    return delta;
 }
+
 
 top::f_t top::frame(const p_t *pts, size_t s)
 {
@@ -165,8 +195,9 @@ int main()
   using top::HorizontalLine;
   using top::IDraw;
   using top::p_t;
+  using top::VerticalLine;
   size_t error = 0;
-  IDraw *shps[3] = {};
+  IDraw *shps[100] = {};
   p_t *pts = nullptr;
   size_t s = 0;
   try
@@ -174,7 +205,8 @@ int main()
     shps[0] = new Dot(0, 0);
     shps[1] = new HorizontalLine({0, 0}, 5);
     shps[2] = new Dot(-10, -2);
-    for (size_t i = 0; i < 3; ++i)
+    shps[3] = new VerticalLine({-1, -3}, 9);
+    for (size_t i = 0; i < 4; ++i)
     {
       s += points(*(shps[i]), &pts, s);
     }
@@ -196,5 +228,6 @@ int main()
   delete shps[0];
   delete shps[1];
   delete shps[2];
+  delete shps[3];
   return error;
 }
