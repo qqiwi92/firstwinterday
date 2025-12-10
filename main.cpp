@@ -27,7 +27,14 @@ struct Dot : IDraw
   p_t next(p_t) const override;
   p_t d;
 };
-
+struct HorizontalLine : IDraw
+{
+  HorizontalLine(p_t left_end, size_t len);
+  p_t begin() const override;
+  p_t next(p_t) const override;
+  p_t left_end;
+  size_t len;
+};
 size_t points(const IDraw &d, p_t **pts, size_t s);
 
 f_t frame(const p_t *pts, size_t s);
@@ -42,45 +49,6 @@ size_t rows(f_t);
 size_t cols(f_t);
 } // namespace top
 
-int main()
-{
-  using top::Dot;
-  using top::f_t;
-  using top::IDraw;
-  using top::p_t;
-  size_t error = 0;
-  IDraw *shps[3] = {};
-  p_t *pts = nullptr;
-  size_t s = 0;
-  try
-  {
-    shps[0] = new Dot(0, 0);
-    shps[1] = new Dot(5, 7);
-    shps[2] = new Dot(-100, -2);
-    for (size_t i = 0; i < 3; ++i)
-    {
-      s += points(*(shps[i]), &pts, s);
-    }
-    f_t fr = frame(pts, s);
-    char *cnv = canvas(fr, '.');
-    for (size_t i = 0; i < s; ++i)
-    {
-      paint(cnv, fr, pts[i], '#');
-    }
-    flush(std::cout, cnv, fr);
-    delete[] cnv;
-  }
-  catch (...)
-  {
-    error = 2;
-    std::cerr << "something went wrong\n";
-  }
-  delete[] pts;
-  delete shps[0];
-  delete shps[1];
-  delete shps[2];
-  return error;
-}
 top::Dot::Dot(p_t dd) : IDraw(), d{dd} {}
 top::Dot::Dot(int x, int y) : IDraw(), d{x, y} {}
 top::p_t top::Dot::begin() const { return d; }
@@ -92,8 +60,24 @@ top::p_t top::Dot::next(p_t prev) const
   }
   return d;
 }
+
+top::p_t top::HorizontalLine::begin() const { return left_end; }
+
+top::p_t top::HorizontalLine::next(p_t prev) const
+{
+  if (prev.x - left_end.x + 1 >= static_cast<int>(len))
+  {
+    return left_end;
+  }
+
+  return {prev.x + 1, prev.y};
+}
+
 bool top::operator==(p_t a, p_t b) { return a.x == b.x && a.y == b.y; }
 bool top::operator!=(p_t a, p_t b) { return !(a == b); }
+top::HorizontalLine::HorizontalLine(top::p_t left_end, size_t len)
+    : IDraw(), left_end{left_end}, len{len}
+{}
 
 void top::extend(p_t **pts, size_t s, p_t p)
 {
@@ -172,4 +156,45 @@ void top::flush(std::ostream &os, const char *cnv, f_t fr)
     }
     os << '\n';
   }
+}
+
+int main()
+{
+  using top::Dot;
+  using top::f_t;
+  using top::HorizontalLine;
+  using top::IDraw;
+  using top::p_t;
+  size_t error = 0;
+  IDraw *shps[3] = {};
+  p_t *pts = nullptr;
+  size_t s = 0;
+  try
+  {
+    shps[0] = new Dot(0, 0);
+    shps[1] = new HorizontalLine({0, 0}, 5);
+    shps[2] = new Dot(-10, -2);
+    for (size_t i = 0; i < 3; ++i)
+    {
+      s += points(*(shps[i]), &pts, s);
+    }
+    f_t fr = frame(pts, s);
+    char *cnv = canvas(fr, '.');
+    for (size_t i = 0; i < s; ++i)
+    {
+      paint(cnv, fr, pts[i], '#');
+    }
+    flush(std::cout, cnv, fr);
+    delete[] cnv;
+  }
+  catch (...)
+  {
+    error = 2;
+    std::cerr << "something went wrong\n";
+  }
+  delete[] pts;
+  delete shps[0];
+  delete shps[1];
+  delete shps[2];
+  return error;
 }
