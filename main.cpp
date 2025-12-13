@@ -63,6 +63,14 @@ struct Rectangle : IDraw
   p_t left_bottom, right_top;
 };
 
+struct Square : IDraw
+{
+  Square(p_t left_bottom, int side); // так то отрицательная сторона тоже норм
+  p_t begin() const override;
+  p_t next(p_t) const override;
+  Rectangle shape;
+};
+
 size_t points(const IDraw &d, p_t **pts, size_t s);
 
 f_t frame(const p_t *pts, size_t s);
@@ -151,6 +159,13 @@ top::p_t top::Rectangle::next(p_t prev) const
   }
 }
 
+top::p_t top::Square::begin() const
+{
+  return {shape.left_bottom.x, shape.right_top.y};
+}
+
+top::p_t top::Square::next(p_t prev) const { return shape.next(prev); }
+
 bool top::operator==(p_t a, p_t b) { return a.x == b.x && a.y == b.y; }
 bool top::operator!=(p_t a, p_t b) { return !(a == b); }
 top::HorizontalLine::HorizontalLine(top::p_t left_end, size_t len)
@@ -169,6 +184,12 @@ top::Rectangle::Rectangle(p_t left_bottom, p_t right_top)
     : left_bottom(left_bottom), right_top(right_top)
 {
 }
+
+top::Square::Square(p_t left_bottom, int side)
+    : shape(left_bottom, {left_bottom.x + side, left_bottom.y + side})
+{
+}
+
 
 void top::extend(p_t **pts, size_t s, p_t p)
 {
@@ -262,13 +283,14 @@ int main()
   using top::p_t;
   using top::Rectangle;
   using top::VerticalLine;
+  using top::Square;
   size_t error = 0;
   IDraw *shps[100] = {};
   p_t *pts = nullptr;
   size_t s = 0;
   try
   {
-    shps[0] = new Rectangle({0, -2}, {10, 4});
+    shps[0] = new Square({0, -2},0);
     shps[1] = new HorizontalLine({4, 4}, 2);
     shps[2] = new Dot(-10, -2);
     shps[3] = new VerticalLine({-1, -3}, 3);
