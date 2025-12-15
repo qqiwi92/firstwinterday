@@ -1,8 +1,11 @@
 #include "idraw.hpp"
 #include "geom.hpp"
 
-
 using top::p_t;
+
+namespace
+{
+// или статик сюда добавляем
 void extend(p_t **pts, size_t s, p_t p)
 {
   p_t *res = new p_t[s + 1];
@@ -15,6 +18,7 @@ void extend(p_t **pts, size_t s, p_t p)
   *pts = res;
 }
 
+} // namespace
 size_t top::points(const IDraw &d, p_t **pts, size_t s)
 {
   p_t p = d.begin();

@@ -1,18 +1,11 @@
 #include "geom.hpp"
 #include "idraw.hpp"
+#include "dot.hpp"
 #include <cmath>
 #include <iostream>
 namespace top
 {
 
-struct Dot : IDraw
-{
-  Dot(int x, int y);
-  explicit Dot(p_t dd);
-  p_t begin() const override;
-  p_t next(p_t) const override;
-  p_t d;
-};
 struct HorizontalLine : IDraw
 {
   HorizontalLine(p_t left_end, size_t len);
@@ -58,25 +51,11 @@ struct Square : IDraw
 
 f_t frame(const p_t *pts, size_t s);
 
-char *canvas(f_t fr, char fill);
 
-void paint(char *cnv, f_t fr, p_t p, char fill);
 
-void flush(std::ostream &os, const char *cnv, f_t fr);
 
 } // namespace top
 
-top::Dot::Dot(p_t dd) : IDraw(), d{dd} {}
-top::Dot::Dot(int x, int y) : IDraw(), d{x, y} {}
-top::p_t top::Dot::begin() const { return d; }
-top::p_t top::Dot::next(p_t prev) const
-{
-  if (prev != begin())
-  {
-    throw std::logic_error("wrong prev");
-  }
-  return d;
-}
 
 top::p_t top::HorizontalLine::begin() const { return left_end; }
 
