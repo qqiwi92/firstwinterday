@@ -1,17 +1,10 @@
+#include "geom.hpp"
 #include <cmath>
 #include <iostream>
 namespace top
 {
-struct p_t
-{
-  int x, y;
-};
-bool operator==(p_t, p_t);
-bool operator!=(p_t, p_t);
-struct f_t
-{
-  p_t aa, bb;
-};
+    
+
 
 struct IDraw
 {
@@ -81,8 +74,7 @@ void paint(char *cnv, f_t fr, p_t p, char fill);
 
 void flush(std::ostream &os, const char *cnv, f_t fr);
 void extend(p_t **pts, size_t s, p_t p);
-size_t rows(f_t);
-size_t cols(f_t);
+
 } // namespace top
 
 top::Dot::Dot(p_t dd) : IDraw(), d{dd} {}
@@ -166,8 +158,6 @@ top::p_t top::Square::begin() const
 
 top::p_t top::Square::next(p_t prev) const { return shape.next(prev); }
 
-bool top::operator==(p_t a, p_t b) { return a.x == b.x && a.y == b.y; }
-bool top::operator!=(p_t a, p_t b) { return !(a == b); }
 top::HorizontalLine::HorizontalLine(top::p_t left_end, size_t len)
     : IDraw(), left_end{left_end}, len{len}
 {
@@ -189,7 +179,6 @@ top::Square::Square(p_t left_bottom, int side)
     : shape(left_bottom, {left_bottom.x + side, left_bottom.y + side})
 {
 }
-
 
 void top::extend(p_t **pts, size_t s, p_t p)
 {
@@ -282,15 +271,15 @@ int main()
   using top::IDraw;
   using top::p_t;
   using top::Rectangle;
-  using top::VerticalLine;
   using top::Square;
+  using top::VerticalLine;
   size_t error = 0;
   IDraw *shps[100] = {};
   p_t *pts = nullptr;
   size_t s = 0;
   try
   {
-    shps[0] = new Square({0, -2},0);
+    shps[0] = new Square({0, -2}, 0);
     shps[1] = new HorizontalLine({4, 4}, 2);
     shps[2] = new Dot(-10, -2);
     shps[3] = new VerticalLine({-1, -3}, 3);
