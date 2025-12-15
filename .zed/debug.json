@@ -1,0 +1,24 @@
+[
+  {
+    "label": "Debug with Make",
+    "build": {
+      "command": "make",
+      "args": ["-j8"],
+      "cwd": "$ZED_WORKTREE_ROOT"
+    },
+    "program": "$ZED_WORKTREE_ROOT/build/prog",
+    "request": "launch",
+    "adapter": "CodeLLDB"
+  },
+  {
+    "label": "Run main.cpp",
+    "build": {
+      "command": "g++",
+      "args": ["main.cpp", "-o", "build/prog"],
+      "cwd": "$ZED_WORKTREE_ROOT"
+    },
+    "program": "$ZED_WORKTREE_ROOT/build/prog",
+    "request": "launch",
+    "adapter": "CodeLLDB"
+  }
+]

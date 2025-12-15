@@ -1,17 +1,9 @@
 #include "geom.hpp"
+#include "idraw.hpp"
 #include <cmath>
 #include <iostream>
 namespace top
 {
-    
-
-
-struct IDraw
-{
-  virtual ~IDraw() = default;
-  virtual p_t begin() const = 0;
-  virtual p_t next(p_t) const = 0;
-};
 
 struct Dot : IDraw
 {
@@ -64,7 +56,6 @@ struct Square : IDraw
   Rectangle shape;
 };
 
-size_t points(const IDraw &d, p_t **pts, size_t s);
 
 f_t frame(const p_t *pts, size_t s);
 
