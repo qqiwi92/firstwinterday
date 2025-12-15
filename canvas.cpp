@@ -1,5 +1,5 @@
 #include "canvas.hpp"
-
+#include "iostream"
 char *top::canvas(f_t fr, char fill)
 {
   char *cnv = new char[rows(fr) * cols(fr)];

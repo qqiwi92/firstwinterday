@@ -1,6 +1,7 @@
 #include "dot.hpp"
 #include "geom.hpp"
 #include "idraw.hpp"
+#include "canvas.hpp"
 #include <cmath>
 #include <iostream>
 namespace top
