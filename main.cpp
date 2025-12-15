@@ -56,7 +56,6 @@ struct Square : IDraw
   Rectangle shape;
 };
 
-
 f_t frame(const p_t *pts, size_t s);
 
 char *canvas(f_t fr, char fill);
@@ -64,7 +63,6 @@ char *canvas(f_t fr, char fill);
 void paint(char *cnv, f_t fr, p_t p, char fill);
 
 void flush(std::ostream &os, const char *cnv, f_t fr);
-void extend(p_t **pts, size_t s, p_t p);
 
 } // namespace top
 
@@ -169,35 +167,6 @@ top::Rectangle::Rectangle(p_t left_bottom, p_t right_top)
 top::Square::Square(p_t left_bottom, int side)
     : shape(left_bottom, {left_bottom.x + side, left_bottom.y + side})
 {
-}
-
-void top::extend(p_t **pts, size_t s, p_t p)
-{
-  p_t *res = new p_t[s + 1];
-  for (size_t i = 0; i < s; ++i)
-  {
-    res[i] = (*pts)[i];
-  }
-  res[s] = p;
-  delete[] *pts;
-  *pts = res;
-}
-size_t top::points(const IDraw &d, p_t **pts, size_t s)
-{
-  p_t p = d.begin();
-  extend(pts, s, p);
-  size_t delta = 1;
-
-  for (;;)
-  {
-    p_t nxt = d.next(p);
-    if (nxt == d.begin())
-      break;
-    p = nxt;
-    extend(pts, s + delta, p);
-    ++delta;
-  }
-  return delta;
 }
 
 top::f_t top::frame(const p_t *pts, size_t s)
