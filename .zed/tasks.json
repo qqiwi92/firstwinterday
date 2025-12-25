@@ -13,6 +13,6 @@
     "allow_concurrent_runs": false,
     "reveal": "always",
     "shell": "system",
-    "args": [""]
+    "args": ["cli", "&& ./cli.out"]
   }
 ]

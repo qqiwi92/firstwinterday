@@ -6,7 +6,7 @@ paint: $(OBJ)
 	$(CXX) $^ -o $@
 
 cli: cli.o
-	$(CXX) $^ -o  $@
+	$(CXX) $^ -o  $@.out
 
 clean:
 	$(RM) -rf $(OBJ)
