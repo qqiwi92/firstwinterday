@@ -185,7 +185,7 @@ int main()
     shps[1] = new HorizontalLine({4, 4}, 2);
     shps[2] = new Dot(-10, -2);
     shps[3] = new VerticalLine({-1, -3}, 3);
-    for (size_t i = 0; i < 1; ++i)
+    for (size_t i = 0; i < 4; ++i)
     {
       s += points(*(shps[i]), &pts, s);
     }
