@@ -1,0 +1,18 @@
+[
+  {
+    "label": "Run Makefile clean",
+    "command": "make clean",
+    "use_new_terminal": false,
+    "allow_concurrent_runs": false,
+    "reveal": "no_focus",
+  },
+  {
+    "label": "Run Makefile cli",
+    "command": "make",
+    "use_new_terminal": false,
+    "allow_concurrent_runs": false,
+    "reveal": "always",
+    "shell": "system",
+    "args": [""]
+  }
+]
